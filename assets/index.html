@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="大学生 AI 个人成长电子档案库" />
+  <title>我的大学成长档案</title>
+  <style>
+    :root {
+      --ink: #182a3d;
+      --muted: #718197;
+      --line: #e6edf3;
+      --paper: #f7fafc;
+      --white: #ffffff;
+      --blue: #2878d8;
+      --blue-dark: #195bad;
+      --blue-soft: #eaf4ff;
+      --mint: #1c9a83;
+      --mint-soft: #e8f8f4;
+      --gold: #bc7b1c;
+      --gold-soft: #fff6e2;
+      --rose: #c35870;
+      --rose-soft: #fff0f3;
+      --purple: #7856b8;
+      --purple-soft: #f3efff;
+      --shadow: 0 16px 40px rgba(42, 67, 92, .08);
+      --radius: 18px;
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: var(--ink); background: var(--paper); min-height: 100vh; }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    .app-shell { display: flex; min-height: 100vh; }
+    .sidebar { width: 252px; flex: 0 0 252px; padding: 26px 16px; background: #102840; color: #fff; display: flex; flex-direction: column; }
+    .brand { display: flex; gap: 12px; align-items: center; padding: 2px 12px 30px; }
+    .brand-mark { width: 40px; height: 40px; border-radius: 13px; display: grid; place-items: center; font-size: 21px; background: linear-gradient(135deg, #86d8ff, #5e8ef7); box-shadow: 0 8px 22px rgba(91, 152, 235, .28); }
+    .brand strong { display: block; font-size: 15px; letter-spacing: .02em; }
+    .brand span { display: block; margin-top: 3px; color: #9cb4c9; font-size: 11px; }
+    .nav-label { padding: 0 13px 9px; color: #7e9bb3; font-size: 11px; letter-spacing: .12em; }
+    .nav { display: grid; gap: 6px; }
+    .nav button { border: 0; color: #adc2d3; background: transparent; border-radius: 12px; text-align: left; padding: 12px 13px; display: flex; align-items: center; gap: 11px; transition: .2s ease; }
+    .nav button:hover { color: #fff; background: rgba(255,255,255,.08); }
+    .nav button.active { color: #fff; background: #214663; box-shadow: inset 3px 0 #76ccff; }
+    .nav .icon { width: 22px; text-align: center; font-size: 16px; }
+    .sidebar-foot { margin-top: auto; padding: 15px 13px 0; color: #7e9bb3; font-size: 11px; line-height: 1.7; }
+    .sidebar-foot b { color: #d5e6f2; font-weight: 600; }
+    .main { width: min(100%, 1420px); margin: 0 auto; padding: 28px 36px 50px; overflow: hidden; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 26px; }
+    .eyebrow { color: var(--blue); font-size: 12px; font-weight: 700; letter-spacing: .12em; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { margin: 7px 0 0; font-size: clamp(25px, 3vw, 34px); letter-spacing: -.04em; }
+    h2 { margin-bottom: 4px; font-size: 21px; letter-spacing: -.025em; }
+    h3 { margin-bottom: 5px; font-size: 15px; }
+    .top-actions { display: flex; gap: 10px; align-items: center; }
+    .button { border: 1px solid var(--line); border-radius: 11px; padding: 10px 14px; background: var(--white); color: var(--ink); font-weight: 650; font-size: 13px; transition: .2s ease; }
+    .button:hover { border-color: #b7cadb; transform: translateY(-1px); }
+    .button.primary { border-color: var(--blue); color: #fff; background: var(--blue); box-shadow: 0 7px 16px rgba(40, 120, 216, .2); }
+    .button.primary:hover { background: var(--blue-dark); }
+    .button.ghost { background: transparent; }
+    .button.danger { color: #b8495f; }
+    .button.small { padding: 7px 10px; font-size: 12px; }
+    .view { display: none; animation: rise .25s ease; }
+    .view.active { display: block; }
+    @keyframes rise { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    .welcome { padding: 28px 30px; border-radius: 24px; background: linear-gradient(120deg, #e9f5ff 0%, #f5fbff 52%, #edf9f5 100%); border: 1px solid #dcecf7; display: flex; justify-content: space-between; gap: 25px; align-items: center; margin-bottom: 22px; overflow: hidden; position: relative; }
+    .welcome::after { content: ""; position: absolute; width: 240px; height: 240px; right: 7%; top: -115px; border-radius: 50%; border: 36px solid rgba(255,255,255,.48); }
+    .welcome-copy { position: relative; z-index: 1; }
+    .welcome h2 { font-size: 25px; margin-bottom: 8px; }
+    .welcome p { color: #597187; margin-bottom: 0; line-height: 1.7; max-width: 650px; }
+    .profile-chip { position: relative; z-index: 1; display: flex; gap: 12px; align-items: center; min-width: 205px; }
+    .avatar { width: 52px; height: 52px; display: grid; place-items: center; background: #fff; color: var(--blue); border: 1px solid #d7e9f6; border-radius: 17px; font-weight: 750; font-size: 22px; }
+    .profile-chip strong { display: block; font-size: 15px; }
+    .profile-chip span { display: block; margin-top: 4px; color: #668096; font-size: 12px; }
+    .stats { display: grid; grid-template-columns: repeat(6, minmax(120px, 1fr)); gap: 12px; margin-bottom: 25px; }
+    .stat { min-height: 118px; padding: 17px; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: 0 6px 22px rgba(43, 63, 84, .035); }
+    .stat .stat-icon { width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; font-size: 15px; margin-bottom: 13px; }
+    .stat:nth-child(1) .stat-icon { background: var(--gold-soft); color: var(--gold); }
+    .stat:nth-child(2) .stat-icon { background: var(--blue-soft); color: var(--blue); }
+    .stat:nth-child(3) .stat-icon { background: var(--purple-soft); color: var(--purple); }
+    .stat:nth-child(4) .stat-icon { background: var(--rose-soft); color: var(--rose); }
+    .stat:nth-child(5) .stat-icon { background: var(--mint-soft); color: var(--mint); }
+    .stat:nth-child(6) .stat-icon { background: #eef2f5; color: #50687d; }
+    .stat b { display: block; font-size: 26px; line-height: 1; }
+    .stat span { display: block; margin-top: 7px; color: var(--muted); font-size: 12px; }
+    .grid-two { display: grid; grid-template-columns: 1.2fr .8fr; gap: 18px; }
+    .panel { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; box-shadow: 0 6px 22px rgba(43, 63, 84, .035); }
+    .panel-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 17px; }
+    .panel-head p, .muted { color: var(--muted); font-size: 12px; line-height: 1.6; margin-bottom: 0; }
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin-bottom: 21px; }
+    .section-head p { margin: 5px 0 0; color: var(--muted); font-size: 13px; }
+    .records-toolbar { display: grid; grid-template-columns: minmax(220px, 1.5fr) repeat(3, minmax(140px, .65fr)) minmax(120px, .55fr); gap: 9px; padding: 13px; border-radius: 15px; background: #f2f6f9; border: 1px solid var(--line); margin-bottom: 17px; }
+    .input, .select, .textarea { width: 100%; color: var(--ink); border: 1px solid #dce5ec; background: #fff; border-radius: 10px; padding: 10px 12px; outline: none; transition: .2s ease; }
+    .input:focus, .select:focus, .textarea:focus { border-color: #79b5e9; box-shadow: 0 0 0 3px rgba(58, 139, 219, .12); }
+    .textarea { min-height: 88px; resize: vertical; line-height: 1.6; }
+    .record-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    .record-card { border: 1px solid var(--line); border-radius: 15px; padding: 17px; background: #fff; display: flex; flex-direction: column; min-height: 210px; transition: .2s ease; }
+    .record-card:hover { border-color: #bdd5e8; box-shadow: 0 10px 24px rgba(41, 85, 118, .08); transform: translateY(-2px); }
+    .card-top { display: flex; justify-content: space-between; gap: 10px; align-items: start; }
+    .badge { display: inline-flex; align-items: center; padding: 4px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+    .badge.honors { color: #9a6212; background: var(--gold-soft); }
+    .badge.project { color: #1768bd; background: var(--blue-soft); }
+    .badge.research { color: #6945aa; background: var(--purple-soft); }
+    .badge.internship { color: #b1445e; background: var(--rose-soft); }
+    .badge.practice { color: #147e6d; background: var(--mint-soft); }
+    .badge.portfolio { color: #50687d; background: #eef2f5; }
+    .record-card h3 { margin: 13px 0 5px; font-size: 16px; line-height: 1.45; }
+    .record-meta { color: var(--muted); font-size: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+    .record-desc { color: #536b80; font-size: 12px; line-height: 1.65; margin: 12px 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: auto; }
+    .tag { padding: 3px 7px; color: #688096; background: #f3f6f8; border-radius: 6px; font-size: 10px; }
+    .attachment-box { padding: 13px; border: 1px dashed #cbdde9; border-radius: 12px; background: #f8fbfd; }
+    .attachment-box .muted { margin: 6px 0 10px; }
+    .attachment-list { display: grid; gap: 7px; margin-top: 10px; }
+    .attachment-item { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 10px; border: 1px solid #e3ebf0; border-radius: 9px; background: #fff; font-size: 12px; }
+    .attachment-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #526a7f; }
+    .attachment-actions { display: flex; gap: 4px; flex: 0 0 auto; }
+    .file-pill { display: inline-flex; align-items: center; gap: 5px; padding: 4px 7px; border-radius: 7px; color: #386b91; background: #eef7fd; font-size: 11px; }
+    .detail-attachments { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
+    .detail-attachments h3 { margin-bottom: 8px; }
+    .card-actions { display: flex; justify-content: end; gap: 5px; margin-top: 14px; padding-top: 10px; border-top: 1px solid #eff3f6; }
+    .link-btn { border: 0; background: transparent; color: var(--blue); font-size: 12px; padding: 4px 5px; }
+    .link-btn.delete { color: #bb596d; }
+    .empty { padding: 40px 20px; color: var(--muted); text-align: center; border: 1px dashed #cfdde7; border-radius: 15px; background: #fbfdfe; grid-column: 1 / -1; }
+    .empty .empty-icon { font-size: 28px; margin-bottom: 8px; }
+    .empty p { margin: 5px auto 15px; max-width: 390px; font-size: 13px; line-height: 1.7; }
+    .timeline { position: relative; padding-left: 28px; }
+    .timeline::before { content: ""; position: absolute; left: 7px; top: 6px; bottom: 6px; width: 2px; background: #dfeaf2; }
+    .timeline-item { position: relative; padding: 0 0 24px 22px; }
+    .timeline-item::before { content: ""; position: absolute; left: -1px; top: 4px; width: 14px; height: 14px; border: 3px solid #fff; border-radius: 50%; background: var(--blue); box-shadow: 0 0 0 2px #9dc9eb; }
+    .timeline-date { color: var(--blue); font-size: 12px; font-weight: 700; margin-bottom: 5px; }
+    .timeline-item h3 { margin-bottom: 3px; }
+    .timeline-item p { color: var(--muted); line-height: 1.6; font-size: 12px; margin-bottom: 0; }
+    .year-bars { display: grid; gap: 17px; }
+    .year-row { display: grid; grid-template-columns: 44px 1fr 26px; gap: 10px; align-items: center; font-size: 12px; }
+    .bar { height: 8px; border-radius: 99px; background: #edf2f5; overflow: hidden; }
+    .bar i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #6bbbf1, #2878d8); }
+    .resume-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 15px; }
+    .resume-card { padding: 18px; border-radius: 15px; border: 1px solid var(--line); background: #fff; }
+    .resume-card .resume-title { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 13px; }
+    .resume-card .resume-title h3 { margin: 0; font-size: 15px; }
+    .resume-row { display: grid; grid-template-columns: 76px 1fr; gap: 9px; margin-top: 8px; font-size: 12px; line-height: 1.65; }
+    .resume-row b { color: #8192a2; font-weight: 600; }
+    .resume-row span { color: #4f6579; }
+    .callout { padding: 16px; background: #f1f8ff; border: 1px solid #dceefb; border-radius: 13px; color: #526d84; font-size: 12px; line-height: 1.7; }
+    .backup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .backup-box { padding: 21px; border: 1px solid var(--line); border-radius: 16px; background: #fff; }
+    .backup-box h3 { font-size: 16px; }
+    .backup-box p { color: var(--muted); font-size: 12px; line-height: 1.7; }
+    .backup-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .privacy { margin-top: 18px; padding: 18px; background: #fff9ec; border: 1px solid #f4e5be; border-radius: 15px; color: #765e2b; font-size: 12px; line-height: 1.8; }
+    .profile-form { display: grid; gap: 12px; }
+    .field { display: grid; gap: 6px; }
+    .field label { color: #506a80; font-size: 12px; font-weight: 700; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .modal-backdrop { position: fixed; inset: 0; z-index: 20; display: none; place-items: center; padding: 20px; background: rgba(16, 40, 64, .46); backdrop-filter: blur(4px); }
+    .modal-backdrop.open { display: grid; }
+    .modal { width: min(760px, 100%); max-height: 90vh; overflow: auto; background: #fff; border-radius: 20px; box-shadow: 0 24px 80px rgba(20, 50, 75, .22); }
+    .modal-head { display: flex; align-items: start; justify-content: space-between; gap: 15px; padding: 22px 24px 17px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: #fff; z-index: 2; }
+    .modal-head h2 { margin: 0; font-size: 19px; }
+    .modal-close { border: 0; background: #f2f5f7; color: #718197; width: 31px; height: 31px; border-radius: 9px; font-size: 18px; }
+    .modal-body { padding: 22px 24px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-grid .full { grid-column: 1 / -1; }
+    .modal-foot { padding: 15px 24px 22px; display: flex; justify-content: end; gap: 8px; }
+    .toast { position: fixed; z-index: 30; bottom: 24px; left: 50%; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; padding: 11px 16px; color: #fff; background: #193650; border-radius: 10px; font-size: 12px; box-shadow: 0 10px 28px rgba(24, 48, 68, .2); transition: .25s ease; }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+    .mobile-nav { display: none; }
+    @media (max-width: 1100px) { .stats { grid-template-columns: repeat(3, 1fr); } .record-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .records-toolbar { grid-template-columns: 1fr 1fr 1fr; } .records-toolbar .search { grid-column: 1 / -1; } }
+    @media (max-width: 780px) { .sidebar { display: none; } .main { padding: 20px 15px 90px; } .topbar { align-items: start; } .top-actions .button:not(.primary) { display: none; } .welcome { padding: 21px; display: block; } .profile-chip { margin-top: 19px; } .grid-two, .backup-grid { grid-template-columns: 1fr; } .stats { grid-template-columns: repeat(2, 1fr); } .record-grid, .resume-grid { grid-template-columns: 1fr; } .records-toolbar { grid-template-columns: 1fr 1fr; } .records-toolbar .search { grid-column: 1 / -1; } .section-head { align-items: start; flex-direction: column; gap: 10px; } .mobile-nav { position: fixed; z-index: 10; bottom: 0; left: 0; right: 0; display: grid; grid-template-columns: repeat(5, 1fr); padding: 7px 5px calc(7px + env(safe-area-inset-bottom)); background: rgba(16, 40, 64, .97); box-shadow: 0 -7px 20px rgba(23, 50, 70, .16); } .mobile-nav button { border: 0; background: transparent; color: #a7bfd1; font-size: 10px; padding: 5px 1px; } .mobile-nav button.active { color: #fff; } .mobile-nav button span { display: block; font-size: 16px; margin-bottom: 3px; } .form-grid, .two-col { grid-template-columns: 1fr; } .form-grid .full { grid-column: auto; } }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><div class="brand-mark">✦</div><div><strong>大学成长档案</strong><span>College AI Archive</span></div></div>
+      <div class="nav-label">我的空间</div>
+      <nav class="nav" id="sideNav">
+        <button data-view="dashboard" class="active"><span class="icon">⌂</span>成长总览</button>
+        <button data-view="records"><span class="icon">▣</span>我的档案</button>
+        <button data-view="timeline"><span class="icon">◷</span>成长时间线</button>
+        <button data-view="resume"><span class="icon">✎</span>简历素材库</button>
+        <button data-view="backup"><span class="icon">↥</span>数据备份</button>
+      </nav>
+      <div class="sidebar-foot">每完成一件重要的事，就留下结构化记录。<br><b>你的大学经历，值得被好好保存。</b></div>
+    </aside>
+    <main class="main">
+      <header class="topbar">
+        <div><div class="eyebrow" id="viewEyebrow">MY COLLEGE JOURNEY</div><h1 id="viewTitle">成长总览</h1></div>
+        <div class="top-actions"><button class="button" id="editProfileBtn">编辑个人信息</button><button class="button primary" id="quickAddBtn">＋ 新增记录</button></div>
+      </header>
+
+      <section class="view active" id="view-dashboard">
+        <div class="welcome"><div class="welcome-copy"><div class="eyebrow">HELLO, YOUR STORY MATTERS</div><h2><span id="welcomeName">同学</span>，这是你的大学成长空间。</h2><p>把证书、比赛、项目与每一次努力留下来。以后填写综测、申请奖学金、写简历或准备保研材料时，都能快速找到自己的积累。</p></div><div class="profile-chip"><div class="avatar" id="avatarText">同</div><div><strong id="profileName">你的名字</strong><span id="profileMeta">大二 · 专业待补充</span></div></div></div>
+        <div class="stats" id="statsGrid"></div>
+        <div class="grid-two">
+          <div class="panel"><div class="panel-head"><div><h2>最近新增</h2><p>按最近记录时间排列，及时看到新的积累。</p></div><button class="link-btn" data-go="records">查看全部 →</button></div><div class="record-grid" id="recentGrid"></div></div>
+          <div class="panel"><div class="panel-head"><div><h2>年度经历</h2><p>看看每一年留下了多少成长脚印。</p></div><button class="link-btn" data-go="timeline">看时间线 →</button></div><div class="year-bars" id="yearBars"></div></div>
+        </div>
+      </section>
+
+      <section class="view" id="view-records">
+        <div class="section-head"><div><div class="eyebrow">YOUR ARCHIVE</div><h2>我的档案</h2><p>证书、项目、科研、实习、实践与作品，都可以在这里持续补充。</p></div><button class="button primary" id="addRecordBtn">＋ 新增记录</button></div>
+        <div class="records-toolbar"><input class="input search" id="searchInput" placeholder="搜索名称、单位、工具、成果、标签……" /><select class="select" id="categoryFilter"><option value="all">全部类别</option></select><select class="select" id="yearFilter"><option value="all">全部年份</option></select><select class="select" id="tagFilter"><option value="all">全部标签</option></select><select class="select" id="sortSelect"><option value="date-desc">时间倒序</option><option value="date-asc">时间正序</option><option value="created-desc">最近新增</option></select></div>
+        <div class="record-grid" id="recordGrid"></div>
+      </section>
+
+      <section class="view" id="view-timeline">
+        <div class="section-head"><div><div class="eyebrow">YOUR STORY IN TIME</div><h2>成长时间线</h2><p>按时间回看大一到大四，每一段经历都是未来的素材。</p></div><button class="button primary" data-go="records">去补充记录</button></div>
+        <div class="panel"><div class="timeline" id="timelineList"></div></div>
+      </section>
+
+      <section class="view" id="view-resume">
+        <div class="section-head"><div><div class="eyebrow">RESUME MATERIALS</div><h2>简历素材库</h2><p>从档案记录中自动提取可用于简历的角色、行动、成果与能力关键词。</p></div><button class="button primary" id="copyAllPromptBtn">复制全部 AI 提示词</button></div>
+        <div class="callout" style="margin-bottom:17px">这里不会伪装成实时 AI。点击“复制 AI 提示词”，即可把选中的经历整理成结构化提示词，再粘贴给你常用的 AI，让它帮你润色成简历描述。</div>
+        <div class="resume-grid" id="resumeGrid"></div>
+      </section>
+
+      <section class="view" id="view-backup">
+        <div class="section-head"><div><div class="eyebrow">YOUR DATA, YOUR CONTROL</div><h2>数据备份</h2><p>数据只保存在你的浏览器本地，记得定期导出备份。</p></div></div>
+        <div class="backup-grid">
+          <div class="backup-box"><h3>导出档案</h3><p>将个人信息和全部结构化记录保存为 JSON 文件。建议每次集中补充后都导出一次。</p><div class="backup-actions"><button class="button primary" id="exportBtn">下载 JSON 备份</button><button class="button" id="clearExamplesBtn">清空示例记录</button></div></div>
+          <div class="backup-box"><h3>导入档案</h3><p>支持之前导出的 JSON。导入时可以选择合并到现有档案，或覆盖当前档案。JSON 备份保存结构化记录，原始附件仍保留在当前浏览器中。</p><div class="backup-actions"><button class="button" id="mergeImportBtn">合并导入</button><button class="button" id="replaceImportBtn">覆盖导入</button><input id="importInput" type="file" accept="application/json,.json" hidden /></div></div>
+        </div>
+        <div class="panel" style="margin-top:18px"><div class="panel-head"><div><h2>我的基本信息</h2><p>这些信息会显示在首页，可随时修改。</p></div></div><form class="profile-form" id="profileForm"><div class="two-col"><div class="field"><label for="profileNameInput">姓名 / 昵称</label><input class="input" id="profileNameInput" placeholder="例如：林同学" /></div><div class="field"><label for="profileSchoolInput">学校</label><input class="input" id="profileSchoolInput" placeholder="例如：XX 大学" /></div></div><div class="two-col"><div class="field"><label for="profileMajorInput">专业</label><input class="input" id="profileMajorInput" placeholder="例如：新闻学" /></div><div class="field"><label for="profileGradeInput">年级</label><select class="select" id="profileGradeInput"><option>大一</option><option>大二</option><option>大三</option><option>大四</option><option>已毕业</option></select></div></div><div class="field"><label for="profileGoalInput">当前用途 / 目标</label><input class="input" id="profileGoalInput" placeholder="例如：综合测评、奖学金申请、实习、保研" /></div><div><button class="button primary" type="submit">保存个人信息</button></div></form></div>
+        <div class="privacy">🔒 隐私提醒：这是纯本地网页，文字数据保存在 localStorage，附件保存在当前浏览器的 IndexedDB 中，不需要服务器或账号。不要把身份证完整照片、银行卡、密码、未公开的公司机密等敏感信息放进网页；重要原件请单独备份，浏览器清理数据后本地记录和附件可能丢失。JSON 备份不包含原始附件文件。</div>
+      </section>
+    </main>
+  </div>
+  <nav class="mobile-nav" id="mobileNav"><button data-view="dashboard" class="active"><span>⌂</span>总览</button><button data-view="records"><span>▣</span>档案</button><button data-view="timeline"><span>◷</span>时间线</button><button data-view="resume"><span>✎</span>简历</button><button data-view="backup"><span>↥</span>备份</button></nav>
+
+  <div class="modal-backdrop" id="recordModal"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="recordModalTitle"><div class="modal-head"><div><h2 id="recordModalTitle">新增档案记录</h2><p class="muted">信息不完整也没关系，可以先保存，之后继续补充。</p></div><button class="modal-close" id="closeModalBtn" aria-label="关闭">×</button></div><form id="recordForm"><div class="modal-body"><input id="recordId" type="hidden" /><div class="form-grid"><div class="field"><label for="recordCategory">类别 *</label><select class="select" id="recordCategory" required><option value="honors">证书与荣誉</option><option value="project">竞赛与项目</option><option value="research">科研经历</option><option value="internship">实习经历</option><option value="practice">校园与社会实践</option><option value="portfolio">个人作品</option></select></div><div class="field"><label for="recordTitle">名称 *</label><input class="input" id="recordTitle" required placeholder="例如：二等奖学金 / XX 项目" /></div><div class="field"><label for="recordDate">时间</label><input class="input" id="recordDate" type="date" /></div><div class="field"><label for="recordYear">年级 / 年份</label><input class="input" id="recordYear" placeholder="例如：大二 / 2026" /></div><div class="field"><label for="recordOrg">颁发单位 / 公司 / 团队</label><input class="input" id="recordOrg" placeholder="可填写学校、主办方、公司或导师团队" /></div><div class="field"><label for="recordType">项目类型 / 作品类型 / 岗位</label><input class="input" id="recordType" placeholder="例如：奖学金、学科竞赛、产品实习" /></div><div class="field"><label for="recordAward">级别 / 奖项等级</label><input class="input" id="recordAward" placeholder="例如：校级、二等奖、国家级" /></div><div class="field"><label for="recordRole">我的角色 / 身份</label><input class="input" id="recordRole" placeholder="例如：负责人、成员、志愿者、实习生" /></div><div class="field"><label for="recordTeam">团队规模</label><input class="input" id="recordTeam" placeholder="例如：5 人 / 独立完成" /></div><div class="field"><label for="recordTools">工具 / 技术 / 方法</label><input class="input" id="recordTools" placeholder="例如：Excel、Python、访谈、剪映" /></div><div class="field full"><label for="recordDescription">背景 / 简要说明</label><textarea class="textarea" id="recordDescription" placeholder="这件事为什么做？经历的背景是什么？"></textarea></div><div class="field full"><label for="recordResponsibilities">我具体做了什么</label><textarea class="textarea" id="recordResponsibilities" placeholder="尽量写清你独立负责或实际参与的动作"></textarea></div><div class="field full"><label for="recordOutcome">最终成果 / 论文 / 专利 / 作品链接</label><textarea class="textarea" id="recordOutcome" placeholder="最后产出了什么？文件位置或链接也可以写在这里"></textarea></div><div class="field"><label for="recordMetrics">可量化数据</label><input class="input" id="recordMetrics" placeholder="例如：覆盖 200 人、提升 30%、完成 12 篇" /></div><div class="field"><label for="recordAbilities">获得的能力</label><input class="input" id="recordAbilities" placeholder="例如：沟通协作、数据分析、项目管理" /></div><div class="field full"><label for="recordSummary">可写进简历的一句话总结</label><textarea class="textarea" id="recordSummary" placeholder="没有想好可以留空，后续再补充"></textarea></div><div class="field"><label for="recordTags">标签（用逗号分隔）</label><input class="input" id="recordTags" placeholder="例如：奖学金,学习,大二" /></div><div class="field"><label for="recordMaterial">证明材料备注</label><input class="input" id="recordMaterial" placeholder="例如：电脑/综测材料/奖学金证书.pdf" /></div><div class="field full"><label for="recordFiles">证明材料与文件附件</label><div class="attachment-box"><input class="input" id="recordFiles" type="file" multiple accept=".pdf,.png,.jpg,.jpeg,.webp,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.csv,.zip,.txt,.mp4,.mov" /><p class="muted">可一次选择多个文件。保存后，在这条经历的“查看详情”中可以直接打开或下载。</p><div class="attachment-list" id="attachmentDraftList"></div></div></div></div></div><div class="modal-foot"><button class="button" type="button" id="cancelModalBtn">取消</button><button class="button primary" type="submit">保存记录</button></div></form></div></div>
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const STORAGE_KEY = 'college-ai-archive-v1';
+    const ATTACHMENTS_DB = 'college-ai-archive-files-v1';
+    const ATTACHMENTS_STORE = 'files';
+    const CATEGORY_LABELS = { honors: '证书与荣誉', project: '竞赛与项目', research: '科研经历', internship: '实习经历', practice: '校园与社会实践', portfolio: '个人作品' };
+    const CATEGORY_ICONS = { honors: '✦', project: '◇', research: '⌁', internship: '▸', practice: '♧', portfolio: '□' };
+    const initialState = {
+      profile: { name: '你的名字', school: '', major: '', grade: '大二', goal: '综合测评与个人成长记录' },
+      records: [{ id: 'example-scholarship', category: 'honors', title: '示例：二等奖学金', date: '', year: '大二', org: '示例学校', type: '奖学金', award: '二等奖', role: '获奖学生', team: '', tools: '', description: '这是一个示例记录。请点击“清空示例记录”，或编辑成自己的经历。', responsibilities: '', outcome: '示例：在这里填写证书或评定结果。', metrics: '', abilities: '学习能力,自我管理', summary: '示例：大二学年获得二等奖学金。', tags: ['示例', '奖学金', '大二'], material: '示例材料备注', isExample: true, createdAt: Date.now() }]
+    };
+    let state = loadState();
+    let currentView = 'dashboard';
+    let importMode = 'merge';
+    let attachmentDbPromise;
+    let currentDraftRecordId = '';
+    const $ = (id) => document.getElementById(id);
+    const esc = (value) => String(value ?? '').replace(/[&<>'"]/g, ch => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[ch]));
+    const safeDate = (value) => value ? new Date(value + (value.length === 10 ? 'T12:00:00' : '')).getTime() || 0 : 0;
+    const fmtDate = (value) => { if (!value) return '时间待补充'; if (/^\d{4}$/.test(value)) return value; if (/^大[一二三四]$/.test(value)) return value; const d = new Date(value + (value.length === 10 ? 'T12:00:00' : '')); return Number.isNaN(d.getTime()) ? value : d.toLocaleDateString('zh-CN', { year:'numeric', month:'long', day:'numeric' }); };
+    const nowStamp = () => Date.now();
+    function openAttachmentDb() { if (!('indexedDB' in window)) return Promise.reject(new Error('当前浏览器不支持 IndexedDB')); if (!attachmentDbPromise) attachmentDbPromise = new Promise((resolve, reject) => { const request = indexedDB.open(ATTACHMENTS_DB, 1); request.onupgradeneeded = () => { const db = request.result; if (!db.objectStoreNames.contains(ATTACHMENTS_STORE)) { const store = db.createObjectStore(ATTACHMENTS_STORE, { keyPath:'id' }); store.createIndex('recordId', 'recordId', { unique:false }); } }; request.onsuccess = () => resolve(request.result); request.onerror = () => reject(request.error || new Error('无法打开附件数据库')); }); return attachmentDbPromise; }
+    function dbTransaction(mode, work) { return openAttachmentDb().then(db => new Promise((resolve, reject) => { const tx = db.transaction(ATTACHMENTS_STORE, mode); const store = tx.objectStore(ATTACHMENTS_STORE); let result; try { result = work(store); } catch (error) { reject(error); return; } tx.oncomplete = () => resolve(result); tx.onerror = () => reject(tx.error || new Error('附件操作失败')); tx.onabort = () => reject(tx.error || new Error('附件操作已取消')); })); }
+    function listAttachments(recordId) { return dbTransaction('readonly', store => new Promise((resolve, reject) => { const request = store.index('recordId').getAll(recordId); request.onsuccess = () => resolve(request.result || []); request.onerror = () => reject(request.error); })); }
+    function getAttachment(fileId) { return dbTransaction('readonly', store => new Promise((resolve, reject) => { const request = store.get(fileId); request.onsuccess = () => resolve(request.result || null); request.onerror = () => reject(request.error); })); }
+    function addAttachments(recordId, files) { if (!files?.length) return Promise.resolve(); return dbTransaction('readwrite', store => { files.forEach(file => store.put({ id:uid(), recordId, name:file.name, type:file.type || 'application/octet-stream', size:file.size, lastModified:file.lastModified, blob:file, createdAt:nowStamp() })); }); }
+    function removeAttachment(fileId) { return dbTransaction('readwrite', store => store.delete(fileId)); }
+    function removeRecordAttachments(recordId) { return listAttachments(recordId).then(files => { if (!files.length) return; return dbTransaction('readwrite', store => files.forEach(file => store.delete(file.id))); }); }
+    function formatBytes(bytes) { if (!bytes) return '0 KB'; if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB`; return `${(bytes / 1024 / 1024).toFixed(1)} MB`; }
+    function fileIcon(file) { const type = file.type || ''; if (type.includes('pdf') || file.name?.toLowerCase().endsWith('.pdf')) return '📄'; if (type.startsWith('image/')) return '🖼️'; if (type.startsWith('video/')) return '🎬'; return '📎'; }
+    function renderAttachmentDraft(files = []) { const pending = [...($('recordFiles').files || [])]; const pendingHtml = pending.map(file => `<div class="attachment-item"><span class="attachment-name">${fileIcon(file)} ${esc(file.name)} · ${formatBytes(file.size)}（待保存）</span></div>`).join(''); const existingHtml = files.map(file => `<div class="attachment-item"><span class="attachment-name">${fileIcon(file)} ${esc(file.name)} · ${formatBytes(file.size)}</span><span class="attachment-actions"><button class="link-btn delete" type="button" data-action="remove-file" data-file-id="${esc(file.id)}">移除</button></span></div>`).join(''); $('attachmentDraftList').innerHTML = existingHtml + pendingHtml || '<p class="muted">暂未添加附件。</p>'; }
+    async function refreshAttachmentDraft(recordId) { try { const files = recordId ? await listAttachments(recordId) : []; renderAttachmentDraft(files); } catch { renderAttachmentDraft([]); showToast('附件数据库暂不可用'); } }
+    function loadState() { try { const raw = localStorage.getItem(STORAGE_KEY); if (!raw) return structuredClone(initialState); const parsed = JSON.parse(raw); return normalizeState(parsed); } catch { return structuredClone(initialState); } }
+    function normalizeState(input) { const profile = { ...initialState.profile, ...(input?.profile || {}) }; const records = Array.isArray(input?.records) ? input.records.map(normalizeRecord).filter(r => r.title) : []; return { profile, records }; }
+    function normalizeRecord(r) { return { id: r.id || uid(), category: CATEGORY_LABELS[r.category] ? r.category : 'portfolio', title: r.title || '', date: r.date || '', year: r.year || '', org: r.org || '', type: r.type || '', award: r.award || '', role: r.role || '', team: r.team || '', tools: r.tools || '', description: r.description || '', responsibilities: r.responsibilities || '', outcome: r.outcome || '', metrics: r.metrics || '', abilities: r.abilities || '', summary: r.summary || '', tags: Array.isArray(r.tags) ? r.tags : splitTags(r.tags), material: r.material || '', isExample: Boolean(r.isExample), createdAt: r.createdAt || nowStamp() }; }
+    function uid() { return 'r-' + Math.random().toString(36).slice(2) + Date.now().toString(36); }
+    function splitTags(value) { return String(value || '').split(/[,，]/).map(x => x.trim()).filter(Boolean); }
+    function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); renderAll(); }
+    function showToast(message) { const t = $('toast'); t.textContent = message; t.classList.add('show'); clearTimeout(showToast.timer); showToast.timer = setTimeout(() => t.classList.remove('show'), 2400); }
+    function setView(view) { currentView = view; document.querySelectorAll('.view').forEach(el => el.classList.toggle('active', el.id === 'view-' + view)); document.querySelectorAll('[data-view]').forEach(el => el.classList.toggle('active', el.dataset.view === view)); const titles = { dashboard:['MY COLLEGE JOURNEY','成长总览'], records:['YOUR ARCHIVE','我的档案'], timeline:['YOUR STORY IN TIME','成长时间线'], resume:['RESUME MATERIALS','简历素材库'], backup:['YOUR DATA, YOUR CONTROL','数据备份'] }; $('viewEyebrow').textContent = titles[view][0]; $('viewTitle').textContent = titles[view][1]; window.scrollTo({ top: 0, behavior: 'smooth' }); }
+    function renderAll() { renderProfile(); renderStats(); renderRecent(); renderYearBars(); renderFilters(); renderRecords(); renderTimeline(); renderResume(); fillProfileForm(); }
+    function renderProfile() { const name = state.profile.name || '同学'; $('welcomeName').textContent = name; $('profileName').textContent = name; $('avatarText').textContent = name.slice(0,1); const meta = [state.profile.grade || '年级待补充', state.profile.major || '专业待补充'].join(' · '); $('profileMeta').textContent = meta; }
+    function renderStats() { const counts = Object.keys(CATEGORY_LABELS).map(c => state.records.filter(r => r.category === c).length); const items = [['🏅', counts[0], '证书与荣誉'], ['◇', counts[1], '竞赛与项目'], ['⌁', counts[2], '科研经历'], ['▸', counts[3], '实习经历'], ['♧', counts[4], '校园与实践'], ['□', counts[5], '个人作品']]; $('statsGrid').innerHTML = items.map(i => `<div class="stat"><div class="stat-icon">${i[0]}</div><b>${i[1]}</b><span>${i[2]}</span></div>`).join(''); }
+    function sortRecords(records, mode = 'date-desc') { return [...records].sort((a,b) => mode === 'created-desc' ? (b.createdAt || 0) - (a.createdAt || 0) : mode === 'date-asc' ? safeDate(a.date) - safeDate(b.date) : safeDate(b.date) - safeDate(a.date)); }
+    function renderRecent() { const list = sortRecords(state.records, 'created-desc').slice(0, 3); $('recentGrid').innerHTML = list.length ? list.map(recordCard).join('') : emptyState('还没有记录', '点击右上角“新增记录”，留下你的第一段大学经历。', true); }
+    function renderYearBars() { const years = {}; state.records.forEach(r => { const key = r.year || (r.date ? r.date.slice(0,4) : '待补充'); years[key] = (years[key] || 0) + 1; }); const entries = Object.entries(years).sort((a,b) => b[0].localeCompare(a[0], 'zh-CN')); if (!entries.length) { $('yearBars').innerHTML = '<div class="empty">补充记录后，这里会显示年度统计。</div>'; return; } const max = Math.max(...entries.map(x => x[1])); $('yearBars').innerHTML = entries.slice(0, 6).map(([year,count]) => `<div class="year-row"><span>${esc(year)}</span><div class="bar"><i style="width:${Math.max(8, count / max * 100)}%"></i></div><b>${count}</b></div>`).join(''); }
+    function emptyState(title, text, add) { return `<div class="empty"><div class="empty-icon">✦</div><strong>${esc(title)}</strong><p>${esc(text)}</p>${add ? '<button class="button primary" data-action="add">＋ 新增一条</button>' : ''}</div>`; }
+    function recordCard(r) { const tags = r.tags?.length ? r.tags.map(t => `<span class="tag">#${esc(t)}</span>`).join('') : '<span class="tag">待添加标签</span>'; const desc = r.summary || r.description || r.outcome || '这段经历还可以继续补充。'; return `<article class="record-card"><div class="card-top"><span class="badge ${r.category}">${CATEGORY_ICONS[r.category]} ${CATEGORY_LABELS[r.category]}</span><span class="record-meta">${esc(fmtDate(r.date || r.year))}</span></div><h3>${esc(r.title)}</h3><div class="record-meta">${esc(r.org || '单位待补充')}${r.award ? ' · ' + esc(r.award) : ''}</div><p class="record-desc">${esc(desc)}</p><div class="tags">${tags}</div><div class="card-actions"><button class="link-btn" data-action="detail" data-id="${esc(r.id)}">查看详情</button><button class="link-btn" data-action="edit" data-id="${esc(r.id)}">编辑</button><button class="link-btn delete" data-action="delete" data-id="${esc(r.id)}">删除</button></div></article>`; }
+    function getFilteredRecords() { const q = $('searchInput')?.value.trim().toLowerCase() || ''; const cat = $('categoryFilter')?.value || 'all'; const year = $('yearFilter')?.value || 'all'; const tag = $('tagFilter')?.value || 'all'; const sort = $('sortSelect')?.value || 'date-desc'; const filtered = state.records.filter(r => { const hay = [r.title,r.org,r.type,r.award,r.role,r.tools,r.description,r.responsibilities,r.outcome,r.metrics,r.abilities,r.summary,r.material,...(r.tags || [])].join(' ').toLowerCase(); return (!q || hay.includes(q)) && (cat === 'all' || r.category === cat) && (year === 'all' || (r.year || r.date?.slice(0,4)) === year) && (tag === 'all' || (r.tags || []).includes(tag)); }); return sortRecords(filtered, sort); }
+    function renderFilters() { const current = { cat:$('categoryFilter')?.value || 'all', year:$('yearFilter')?.value || 'all', tag:$('tagFilter')?.value || 'all' }; $('categoryFilter').innerHTML = '<option value="all">全部类别</option>' + Object.entries(CATEGORY_LABELS).map(([v,l]) => `<option value="${v}">${l}</option>`).join(''); const years = [...new Set(state.records.map(r => r.year || r.date?.slice(0,4)).filter(Boolean))].sort((a,b) => b.localeCompare(a,'zh-CN')); $('yearFilter').innerHTML = '<option value="all">全部年份</option>' + years.map(y => `<option value="${esc(y)}">${esc(y)}</option>`).join(''); const tags = [...new Set(state.records.flatMap(r => r.tags || []))].sort((a,b) => a.localeCompare(b,'zh-CN')); $('tagFilter').innerHTML = '<option value="all">全部标签</option>' + tags.map(t => `<option value="${esc(t)}">#${esc(t)}</option>`).join(''); $('categoryFilter').value = current.cat; $('yearFilter').value = current.year; $('tagFilter').value = current.tag; }
+    function renderRecords() { const list = getFilteredRecords(); $('recordGrid').innerHTML = list.length ? list.map(recordCard).join('') : emptyState('没有匹配的记录', '可以换个关键词或筛选条件，也可以新增一条经历。', true); }
+    function renderTimeline() { const list = sortRecords(state.records, 'date-desc'); $('timelineList').innerHTML = list.length ? list.map(r => `<div class="timeline-item"><div class="timeline-date">${esc(r.year || fmtDate(r.date))}</div><h3>${esc(r.title)} <span class="badge ${r.category}">${esc(CATEGORY_LABELS[r.category])}</span></h3><p>${esc(r.summary || r.description || r.outcome || '待补充经历详情')}</p></div>`).join('') : emptyState('时间线还没有内容', '每完成一件重要的事，就来这里留下一个时间点。', true); }
+    function resumeText(r) { const fields = [['经历', r.title], ['时间', r.year || fmtDate(r.date)], ['角色', r.role], ['具体工作', r.responsibilities], ['成果', r.outcome], ['量化数据', r.metrics], ['工具方法', r.tools], ['能力关键词', r.abilities]].filter(x => x[1]); return fields.map(x => `${x[0]}：${x[1]}`).join('\n'); }
+    function renderResume() { const list = sortRecords(state.records, 'date-desc'); $('resumeGrid').innerHTML = list.length ? list.map(r => `<article class="resume-card"><div class="resume-title"><h3>${esc(r.title)}</h3><button class="button small" data-action="prompt" data-id="${esc(r.id)}">复制 AI 提示词</button></div>${[['时间',r.year || fmtDate(r.date)],['角色',r.role],['具体工作',r.responsibilities],['最终成果',r.outcome],['量化数据',r.metrics],['工具 / 方法',r.tools],['能力关键词',r.abilities]].map(([k,v]) => v ? `<div class="resume-row"><b>${k}</b><span>${esc(v)}</span></div>` : '').join('')}<div class="resume-row"><b>一句话总结</b><span>${esc(r.summary || '待补充')}</span></div></article>`).join('') : emptyState('简历素材库还是空的', '录入项目、科研、实习或实践经历后，这里会自动生成简历素材视图。', true); }
+    function fillProfileForm() { $('profileNameInput').value = state.profile.name || ''; $('profileSchoolInput').value = state.profile.school || ''; $('profileMajorInput').value = state.profile.major || ''; $('profileGradeInput').value = state.profile.grade || '大二'; $('profileGoalInput').value = state.profile.goal || ''; }
+    function openRecordModal(record) { currentDraftRecordId = record?.id || ''; $('recordModal').classList.add('open'); $('recordModalTitle').textContent = record ? '编辑档案记录' : '新增档案记录'; $('recordId').value = record?.id || ''; $('recordFiles').value = ''; const keys = ['recordCategory','recordTitle','recordDate','recordYear','recordOrg','recordType','recordAward','recordRole','recordTeam','recordTools','recordDescription','recordResponsibilities','recordOutcome','recordMetrics','recordAbilities','recordSummary','recordMaterial']; const vals = record ? { recordCategory:record.category, recordTitle:record.title, recordDate:record.date, recordYear:record.year, recordOrg:record.org, recordType:record.type, recordAward:record.award, recordRole:record.role, recordTeam:record.team, recordTools:record.tools, recordDescription:record.description, recordResponsibilities:record.responsibilities, recordOutcome:record.outcome, recordMetrics:record.metrics, recordAbilities:record.abilities, recordSummary:record.summary, recordMaterial:record.material } : { recordCategory:'honors', recordTitle:'', recordDate:'', recordYear:state.profile.grade || '大二', recordOrg:'', recordType:'', recordAward:'', recordRole:'', recordTeam:'', recordTools:'', recordDescription:'', recordResponsibilities:'', recordOutcome:'', recordMetrics:'', recordAbilities:'', recordSummary:'', recordMaterial:'' }; keys.forEach(k => $(k).value = vals[k] || ''); $('recordTags').value = record?.tags?.join(',') || ''; refreshAttachmentDraft(currentDraftRecordId); document.body.style.overflow = 'hidden'; }
+    function closeRecordModal() { $('recordModal').classList.remove('open'); document.body.style.overflow = ''; }
+    function collectFormRecord() { return normalizeRecord({ id:$('recordId').value || uid(), category:$('recordCategory').value, title:$('recordTitle').value.trim(), date:$('recordDate').value, year:$('recordYear').value.trim(), org:$('recordOrg').value.trim(), type:$('recordType').value.trim(), award:$('recordAward').value.trim(), role:$('recordRole').value.trim(), team:$('recordTeam').value.trim(), tools:$('recordTools').value.trim(), description:$('recordDescription').value.trim(), responsibilities:$('recordResponsibilities').value.trim(), outcome:$('recordOutcome').value.trim(), metrics:$('recordMetrics').value.trim(), abilities:$('recordAbilities').value.trim(), summary:$('recordSummary').value.trim(), tags:splitTags($('recordTags').value), material:$('recordMaterial').value.trim(), createdAt: nowStamp() }); }
+    async function deleteRecord(id) { const record = state.records.find(r => r.id === id); if (!record || !confirm(`确定删除“${record.title}”吗？删除后请从备份中恢复。`)) return; state.records = state.records.filter(r => r.id !== id); try { await removeRecordAttachments(id); } catch { showToast('记录已删除，但附件清理失败'); } saveState(); showToast('记录已删除'); }
+    function attachmentDetailHtml(files) { if (!files.length) return '<div class="detail-attachments"><h3>证明材料与文件</h3><p class="muted">暂未绑定文件。编辑这条记录即可添加 PDF、图片或其他材料。</p></div>'; return `<div class="detail-attachments"><h3>证明材料与文件 <span class="muted">（${files.length} 个）</span></h3><div class="attachment-list">${files.map(file => `<div class="attachment-item"><span class="attachment-name">${fileIcon(file)} ${esc(file.name)} · ${formatBytes(file.size)}</span><span class="attachment-actions"><button class="link-btn" data-action="open-file" data-file-id="${esc(file.id)}">打开</button><button class="link-btn" data-action="download-file" data-file-id="${esc(file.id)}">下载</button></span></div>`).join('')}</div></div>`; }
+    async function detailRecord(id) { const r = state.records.find(x => x.id === id); if (!r) return; let files = []; try { files = await listAttachments(id); } catch { showToast('无法读取附件'); } const rows = [['类别',CATEGORY_LABELS[r.category]],['时间',r.year || fmtDate(r.date)],['单位 / 团队',r.org],['类型 / 岗位',r.type],['级别 / 奖项',r.award],['角色',r.role],['团队规模',r.team],['工具 / 方法',r.tools],['背景说明',r.description],['具体工作',r.responsibilities],['成果',r.outcome],['量化数据',r.metrics],['能力',r.abilities],['简历总结',r.summary],['标签',r.tags?.join('、')],['材料备注',r.material]].filter(x => x[1]); const modalHtml = `<div class="modal-backdrop open" id="detailModal"><div class="modal"><div class="modal-head"><div><h2>${esc(r.title)}</h2><p class="muted">${esc(CATEGORY_LABELS[r.category])} · ${esc(fmtDate(r.date || r.year))}</p></div><button class="modal-close" data-action="close-detail">×</button></div><div class="modal-body">${rows.map(([k,v]) => `<div class="resume-row" style="grid-template-columns:100px 1fr;margin-top:0;margin-bottom:12px"><b>${esc(k)}</b><span>${esc(v)}</span></div>`).join('')}${attachmentDetailHtml(files)}</div><div class="modal-foot"><button class="button" data-action="close-detail">关闭</button><button class="button primary" data-action="edit" data-id="${esc(r.id)}">编辑这条记录</button></div></div></div>`; document.body.insertAdjacentHTML('beforeend', modalHtml); }
+    async function openAttachment(fileId, download = false) { try { const file = await getAttachment(fileId); if (!file) return showToast('找不到这个附件'); const url = URL.createObjectURL(file.blob); const link = document.createElement('a'); link.href = url; if (download) { link.download = file.name; document.body.appendChild(link); link.click(); link.remove(); showToast('附件已开始下载'); } else { link.target = '_blank'; link.rel = 'noopener'; document.body.appendChild(link); link.click(); link.remove(); showToast('已打开附件'); } setTimeout(() => URL.revokeObjectURL(url), 60000); } catch { showToast('附件打开失败'); } }
+    async function removeDraftAttachment(fileId) { if (!confirm('确定移除这个附件吗？')) return; try { await removeAttachment(fileId); await refreshAttachmentDraft(currentDraftRecordId); showToast('附件已移除'); } catch { showToast('附件移除失败'); } }
+    function makePrompt(records) { return ['请把下面的大学经历整理成适合写进简历的中文描述。', '要求：', '1. 使用 STAR 结构，突出我的具体行动和最终结果；', '2. 不要编造没有提供的数据；', '3. 输出 2 个版本：一条精炼简历 bullet 和一段面试口述素材；', '', ...records.map(resumeText).map((x,i) => `【经历 ${i+1}】\n${x}`)].join('\n'); }
+    async function copyText(text, success = '已复制到剪贴板') { try { await navigator.clipboard.writeText(text); showToast(success); } catch { const area = document.createElement('textarea'); area.value = text; document.body.appendChild(area); area.select(); document.execCommand('copy'); area.remove(); showToast(success); } }
+    function exportData() { const payload = { format: 'college-ai-archive', version: 1, exportedAt: new Date().toISOString(), profile: state.profile, records: state.records }; const blob = new Blob([JSON.stringify(payload, null, 2)], { type:'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `大学电子档案备份-${new Date().toISOString().slice(0,10)}.json`; a.click(); URL.revokeObjectURL(a.href); showToast('备份文件已下载'); }
+    function importData(file, mode) { if (!file) return; const reader = new FileReader(); reader.onload = () => { try { const parsed = JSON.parse(reader.result); if (!parsed || !Array.isArray(parsed.records)) throw new Error('格式'); const incoming = normalizeState(parsed); if (mode === 'replace') { if (!confirm('覆盖导入会替换当前档案，建议先导出备份。确定继续吗？')) return; state = incoming; } else { const existing = new Map(state.records.map(r => [r.id, r])); incoming.records.forEach(r => existing.set(r.id, r)); state.records = [...existing.values()]; state.profile = { ...state.profile, ...incoming.profile }; } saveState(); showToast(mode === 'replace' ? '已覆盖导入档案' : '已合并导入档案'); } catch { showToast('导入失败：不是有效的档案 JSON'); } $('importInput').value = ''; }; reader.readAsText(file); }
+
+    document.addEventListener('click', (e) => { const viewBtn = e.target.closest('[data-view]'); if (viewBtn) { setView(viewBtn.dataset.view); return; } const go = e.target.closest('[data-go]'); if (go) { setView(go.dataset.go); return; } const action = e.target.closest('[data-action]'); if (!action) return; const act = action.dataset.action; if (act === 'add') openRecordModal(); if (act === 'edit') { const r = state.records.find(x => x.id === action.dataset.id); if (r) { document.getElementById('detailModal')?.remove(); openRecordModal(r); } } if (act === 'delete') deleteRecord(action.dataset.id); if (act === 'detail') detailRecord(action.dataset.id); if (act === 'close-detail') document.getElementById('detailModal')?.remove(); if (act === 'prompt') { const r = state.records.find(x => x.id === action.dataset.id); if (r) copyText(makePrompt([r])); } if (act === 'open-file') openAttachment(action.dataset.fileId); if (act === 'download-file') openAttachment(action.dataset.fileId, true); if (act === 'remove-file') removeDraftAttachment(action.dataset.fileId); });
+    $('quickAddBtn').addEventListener('click', () => openRecordModal()); $('addRecordBtn').addEventListener('click', () => openRecordModal()); $('closeModalBtn').addEventListener('click', closeRecordModal); $('cancelModalBtn').addEventListener('click', closeRecordModal); $('recordModal').addEventListener('click', e => { if (e.target.id === 'recordModal') closeRecordModal(); });
+    $('recordFiles').addEventListener('change', () => refreshAttachmentDraft(currentDraftRecordId));
+    $('recordForm').addEventListener('submit', async e => { e.preventDefault(); const record = collectFormRecord(); if (!record.title) return; const index = state.records.findIndex(r => r.id === record.id); const submit = $('recordForm').querySelector('button[type="submit"]'); const selectedFiles = [...($('recordFiles').files || [])]; submit.disabled = true; submit.textContent = '保存中…'; if (index >= 0) state.records[index] = record; else state.records.push(record); let attachmentFailed = false; try { await addAttachments(record.id, selectedFiles); } catch { attachmentFailed = selectedFiles.length > 0; } submit.disabled = false; submit.textContent = '保存记录'; closeRecordModal(); saveState(); showToast(attachmentFailed ? '记录已保存，但附件未能保存' : (selectedFiles.length ? `记录已保存，已添加 ${selectedFiles.length} 个附件` : (index >= 0 ? '记录已更新' : '记录已保存'))); });
+    ['searchInput','categoryFilter','yearFilter','tagFilter','sortSelect'].forEach(id => $(id).addEventListener('input', renderRecords));
+    $('profileForm').addEventListener('submit', e => { e.preventDefault(); state.profile = { name:$('profileNameInput').value.trim() || '你的名字', school:$('profileSchoolInput').value.trim(), major:$('profileMajorInput').value.trim(), grade:$('profileGradeInput').value, goal:$('profileGoalInput').value.trim() }; saveState(); showToast('个人信息已保存'); }); $('editProfileBtn').addEventListener('click', () => { setView('backup'); $('profileNameInput').focus(); });
+    $('exportBtn').addEventListener('click', exportData); $('clearExamplesBtn').addEventListener('click', () => { const count = state.records.filter(r => r.isExample).length; if (!count) { showToast('当前没有标记为示例的记录'); return; } if (confirm(`确定清空 ${count} 条示例记录吗？`)) { state.records = state.records.filter(r => !r.isExample); saveState(); showToast('示例记录已清空'); } }); $('mergeImportBtn').addEventListener('click', () => { importMode = 'merge'; $('importInput').click(); }); $('replaceImportBtn').addEventListener('click', () => { importMode = 'replace'; $('importInput').click(); }); $('importInput').addEventListener('change', e => importData(e.target.files[0], importMode)); $('copyAllPromptBtn').addEventListener('click', () => { if (!state.records.length) return showToast('还没有可整理的经历'); copyText(makePrompt(state.records), '全部 AI 提示词已复制'); });
+    renderAll();
+  </script>
+</body>
+</html>
+
