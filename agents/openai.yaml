@@ -1,0 +1,8 @@
+interface:
+  display_name: "大学生成长档案网站"
+  short_description: "生成可搜索、可备份、可挂载材料的成长档案网站"
+  brand_color: "#2878D8"
+  default_prompt: "Use $college-ai-archive-builder to create or update a standalone university growth archive website with direct certificate and proof-material attachments."
+policy:
+  allow_implicit_invocation: true
+
