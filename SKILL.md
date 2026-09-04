@@ -1,6 +1,6 @@
 ---
 name: college-ai-archive-builder
-description: Build or update a Chinese university-student growth archive website or multi-user web app with searchable records, resume material extraction, local fallback, optional cloud persistence, JSON backup, and private file attachments. Use when someone wants to organize certificates, scholarships, competitions, research, internships, campus practice, portfolios, or comprehensive-assessment materials into a reusable personal archive.
+description: Build or update a privacy-first Chinese university-student growth archive website with searchable records, resume material extraction, local-first persistence, optional user-owned WebDAV synchronization, JSON backup, and file attachments. Use when someone wants to organize certificates, scholarships, competitions, research, internships, campus practice, portfolios, or comprehensive-assessment materials into a reusable personal archive.
 metadata:
   short-description: Build a reusable university growth archive website
 ---
@@ -11,8 +11,8 @@ Use this Skill to deliver a finished, copy-and-open university experience archiv
 
 ## Required deliverable
 
-- Start from `assets/index.html`, which is the tested template and supports a local fallback plus optional cloud mode.
-- For local mode, deliver a single `index.html` containing HTML, CSS, and JavaScript that opens by double-clicking. For cloud mode, include `cloud.js`, `supabase-config.js`, and `supabase-schema.sql` and explain the one-time Supabase setup.
+- Start from `assets/index.html`, which is the tested local-first template and supports optional user-owned WebDAV synchronization.
+- Deliver a single `index.html` containing HTML, CSS, and JavaScript that opens by double-clicking, plus `sync.js` for optional direct-to-user-WebDAV synchronization.
 - If the user gives personal experiences, put those into the initial data without inventing missing facts. Keep unknown fields editable and label any fabricated demo data clearly as 示例.
 - Keep the existing visual style: clean, youthful, practical, responsive, with a left navigation on desktop and a bottom navigation on mobile.
 
@@ -25,7 +25,7 @@ The generated page must include all of these modules:
 - University growth timeline and yearly statistics.
 - Resume-material view that extracts role, actions, outcomes, metrics, tools, and abilities. It may offer a “copy AI prompt” action, but must not pretend to call an AI API without one.
 - Local browser persistence through `localStorage` for structured profile and record data when cloud mode is not configured.
-- Optional account login and per-user cloud persistence through Supabase Auth, Postgres, RLS, and private Storage.
+- Optional direct synchronization to a user-selected WebDAV/cloud endpoint. Do not introduce a central database for personal records unless the user explicitly requests it.
 - JSON merge import, overwrite import, and export with a dated filename.
 - Clear, visible privacy guidance: sensitive identity documents, passwords, bank details, and confidential third-party/company files should not be placed in the archive.
 
@@ -33,7 +33,7 @@ The generated page must include all of these modules:
 
 Each record must support multiple attachments for certificates, scans, screenshots, PDFs, images, or project files.
 
-- In local mode, store attachment blobs in browser `IndexedDB`, keyed by record ID. In cloud mode, store files in private Supabase Storage under a user-scoped path and keep only metadata in Postgres. Do not put large binary files in `localStorage` or GitHub.
+- Store attachment blobs in browser `IndexedDB`, keyed by record ID. When sync is enabled, upload the blobs directly to the user's WebDAV endpoint and keep the archive manifest beside them. Do not put personal files in GitHub or an assistant-owned server.
 - In each record detail view, provide direct `打开` and `下载` actions. In the edit form, provide the ability to add and remove attachments.
 - Deleting a record should also remove its associated attachment records.
 - Tell the user that attachments belong to the current browser profile and can be lost when browser data is cleared. JSON export should clearly state whether it includes original files; the template exports structured data only, so important originals still need an independent backup.
@@ -58,7 +58,7 @@ After adapting the template:
 1. Confirm the output file exists and is a standalone `index.html`.
 2. Extract the inline `<script>` and run a JavaScript syntax check with Node when available.
 3. Check that attachment APIs, local fallback, JSON import/export, responsive CSS, and the six category labels remain present.
-4. When cloud mode is requested, require `supabase-schema.sql`, a publishable/anon key, Auth, RLS, and private Storage; never expose a `service_role` key.
+4. When synchronization is requested, check that credentials are used only in memory, HTTPS and CORS are required, and no personal content or cloud password is sent to a project-owned server.
 5. If a browser is available, smoke-test opening the file, adding a record, attaching a small file, reopening its detail view, and exporting JSON. If a browser is not available, report the static checks performed without claiming a browser test.
 
 Deliver the file path, how to open it, where data is stored, and the backup limitation in a short handoff.
